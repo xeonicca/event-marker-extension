@@ -23,6 +23,10 @@ function App() {
 
   const doLogin = async () => {
     const res = await sendMessage('login', 'auth', null)
+    if (res.error) {
+      console.error(res.error)
+      return
+    }
     setUser(res.user)
     readEvents()
   }
