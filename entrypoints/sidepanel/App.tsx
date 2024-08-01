@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import reactLogo from '@/assets/react.svg';
 import wxtLogo from '/wxt.svg';
 import './App.css';
@@ -33,7 +33,7 @@ function App() {
 
   const addEvent = async () => {
     const res = await sendMessage('create', 'data', [
-      'event-name-1',
+      'event-name-2',
       {
         test1: 'test1',
         test2: 'test2',
@@ -53,10 +53,41 @@ function App() {
     console.log(res)
   }
 
+  const deleteEvent = async () => {
+    const res = await sendMessage('delete', 'data', ['event-name-1'])
+    console.log(res)
+  }
+
   const publishEvent = async () => {
     const res = await sendMessage('upload', 'storage', null)
     console.log(res)
   }
+
+  const setDevMode = async () => {
+    console.log('Setting dev mode');
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (!tab.id) return;
+    chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: () => {
+        console.log('Dev mode enabled');
+        localStorage.setItem('auto-tracking-dev-mode', 'true');
+      },
+    });
+  };
+
+  useEffect(() => {
+    const handleMessage = (message) => {
+      if(message.type === 'at-event-from-content') {
+        console.log('Message received in the sidepanel:', message.data)
+      }
+    }
+
+    chrome.runtime.onMessage.addListener(handleMessage);
+    return () => {
+      chrome.runtime.onMessage.removeListener(handleMessage);
+    };
+  }, []);
 
   return (
     <>
@@ -78,12 +109,20 @@ function App() {
           Login
         </button>
 
+        <button onClick={setDevMode}>
+          Set Dev Mode
+        </button>
+
         <button onClick={addEvent}>
           add event
         </button>
 
         <button onClick={editEvent}>
           update event
+        </button>
+
+        <button onClick={deleteEvent}>
+          delete event
         </button>
 
         <button onClick={publishEvent}>

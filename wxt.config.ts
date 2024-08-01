@@ -11,7 +11,14 @@ export default defineConfig({
       "offscreen"
     ],
     "host_permissions": [
-      "https://at-marker-extension-dev.firebaseapp.com/*"
+      "https://at-marker-extension-dev.firebaseapp.com/*",
+      "https://tw.staging-cs.amazingtalker.com/"
+    ],
+    "content_scripts": [
+      {
+        "matches": ["http://*/*", "https://*/*"],
+        "js": ["content-scripts/content.js"]
+      }
     ],
   },
 });
