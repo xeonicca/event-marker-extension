@@ -1,4 +1,4 @@
-import { useState, FunctionComponent, createElement } from 'react';
+import { useState } from 'react';
 import Login from './components/Login'
 import EventsEdit from './components/EventsEdit'
 
@@ -16,7 +16,7 @@ const Container = () => {
     setActiveComponent(component as keyof typeof Components);
   };
 
-  function sendMessage(action, actionType, params) {
+  function sendMessage(action: string, actionType: string, params: any) {
     return new Promise((resolve, reject) => {
       chrome.runtime.sendMessage({ action, actionType, params }).then(response => {
         console.dir(response)

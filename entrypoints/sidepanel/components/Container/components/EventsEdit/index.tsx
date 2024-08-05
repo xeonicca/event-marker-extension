@@ -1,7 +1,16 @@
 import { useState, useEffect } from 'react';
+import ReceivedEvents from './components/ReceivedEvents';
 
-export default function EventsEdit({sendMessage}) {
-  const [events, setEvents] = useState([])
+type EventsEditProps = {
+  sendMessage: (action: string, actionType: string, params: any) => Promise<any>;
+};
+
+export type Event = {
+  [key: string]: string;
+};
+
+export default function EventsEdit({sendMessage}: EventsEditProps) {
+  const [events, setEvents] = useState<Event[]>([])
 
   const setDevMode = async () => {
     console.log('Setting dev mode');
@@ -23,14 +32,11 @@ export default function EventsEdit({sendMessage}) {
     setEvents(res)
   }
 
-  const addEvent = async () => {
+  const addEvent = async (name: string, data: {[key:string]: string}) => {
+    console.log('Adding event:', name, data)
     const res = await sendMessage('create', 'data', [
-      'event-name-2',
-      {
-        test1: 'test1',
-        test2: 'test2',
-        test3: 'test3',
-      }
+      name,
+      data
     ])
     console.log(res)
   }
@@ -66,12 +72,7 @@ export default function EventsEdit({sendMessage}) {
         {events.map((event, index) => (
           <p key={index}>{event.id}</p>
         ))}
-
       </div>
-
-      <button onClick={addEvent}>
-        add event
-      </button>
 
       <button onClick={editEvent}>
         update event
@@ -84,6 +85,7 @@ export default function EventsEdit({sendMessage}) {
       <button onClick={publishEvent}>
         publish event
       </button>
+      <ReceivedEvents addEvent={addEvent} readEvents={readEvents}/>
     </div>
   );
 }
