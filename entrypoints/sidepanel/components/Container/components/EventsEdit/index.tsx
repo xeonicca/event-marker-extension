@@ -11,8 +11,14 @@ export type Event = {
   [key: string]: string;
 };
 
+type Message = {
+  type: string;
+  data: any;
+}
+
 export default function EventsEdit({sendMessage}: EventsEditProps) {
   const [customEvents, setCustomEvents] = useState<Event[]>([])
+  const [receivedEvents, setReceivedEvents] = useState<Event[]>([]);
   const [activeComponent, setActiveComponent] = useState<string>(COMPONENTS.ReceivedEvents);
   const showReceivedEvents = activeComponent === COMPONENTS.ReceivedEvents;
 
@@ -70,6 +76,33 @@ export default function EventsEdit({sendMessage}: EventsEditProps) {
     readEvents()
   }, [])
 
+  useEffect(() => {
+    const handleMessage = (message: Message) => {
+      if(message.type === 'at-event-from-content') {
+        console.log('Message received in the sidepanel:', message.data)
+        const newEvent = message.data as Event;
+  
+        const existingEvent = customEvents.find(customEvent => {
+          return Object.entries(customEvent).every(([key, value]) => {
+            if(key === 'id') return true;
+            return newEvent[key] === value;
+          });
+        });
+  
+        if (existingEvent && existingEvent.id) {
+          newEvent.id = existingEvent.id;
+        }
+  
+        setReceivedEvents((prevEvents) => [...prevEvents, newEvent]);
+      }
+    }
+
+    chrome.runtime.onMessage.addListener(handleMessage);
+    return () => {
+      chrome.runtime.onMessage.removeListener(handleMessage);
+    };
+  }, [customEvents]);
+
   return (
     <div>
       <button onClick={() => {setActiveComponent(COMPONENTS.CustomEventList)}}> {COMPONENTS.CustomEventList} </button>
@@ -81,7 +114,7 @@ export default function EventsEdit({sendMessage}: EventsEditProps) {
       <button onClick={editEvent}>
         update event
       </button>
-      {showReceivedEvents && <ReceivedEvents addEvent={addEvent} readEvents={readEvents}/>}
+      {showReceivedEvents && <ReceivedEvents receivedEvents={receivedEvents} addEvent={addEvent} readEvents={readEvents}/>}
     </div>
   );
 }

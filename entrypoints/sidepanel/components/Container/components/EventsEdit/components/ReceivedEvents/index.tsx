@@ -5,17 +5,12 @@ export type Event = {
 };
 
 type ReceivedEventsProps = {
+  receivedEvents: Event[];
   addEvent: (name: string, data: {[key:string]:string}) => void;
   readEvents: () => void;
 };
 
-type Message = {
-    type: string;
-    data: any;
-  }
-
-function ReceivedEvents({addEvent, readEvents}:ReceivedEventsProps) {
-  const [receivedEvents, setReceivedEvents] = useState<Event[]>([]);
+function ReceivedEvents({receivedEvents ,addEvent, readEvents}:ReceivedEventsProps) {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [selectedFilterData, setSelectedFilterData] = useState<{[key: string]: string}>({});
 
@@ -43,27 +38,13 @@ function ReceivedEvents({addEvent, readEvents}:ReceivedEventsProps) {
     readEvents();
   }
 
-  useEffect(() => {
-    const handleMessage = (message: Message) => {
-      if(message.type === 'at-event-from-content') {
-        console.log('Message received in the sidepanel:', message.data)
-        setReceivedEvents((prevEvents) => [...prevEvents, message.data]);
-      }
-    }
-
-    chrome.runtime.onMessage.addListener(handleMessage);
-    return () => {
-      chrome.runtime.onMessage.removeListener(handleMessage);
-    };
-  }, []);
-
   return (
     <div>
       <h3>Selected Events</h3>
       <div>
         {receivedEvents.map(event => (
-          <div key={event.elementId} onClick={() => {onEventSelect(event)}} className="eventItem">
-              {event.eventType} - {event.elementId}
+          <div key={event.id || event.elementId} onClick={() => {onEventSelect(event)}} className="eventItem">
+              { event.id || `${event.eventType} - ${event.elementId}`}
           </div>
         ))}
       </div>

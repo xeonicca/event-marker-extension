@@ -17,9 +17,9 @@ export default function CustomEventList({events, deleteEvent, readEvents }: Cust
 
   return (
     <div>
-      {events.map((event, index) => (
-        <div>
-          <p key={index}>{event.id}</p>
+      {events.map((event) => (
+        <div key={event.id}>
+          <p>{event.id}</p>
           <button onClick={() => {onDeleteCLick(event.id)}}>
             delete event  
           </button>
