@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
+import CustomEventList from './components/CustomEventList';
 import ReceivedEvents from './components/ReceivedEvents';
+import { COMPONENTS } from './constants';
 
 type EventsEditProps = {
   sendMessage: (action: string, actionType: string, params: any) => Promise<any>;
@@ -10,7 +12,9 @@ export type Event = {
 };
 
 export default function EventsEdit({sendMessage}: EventsEditProps) {
-  const [events, setEvents] = useState<Event[]>([])
+  const [customEvents, setCustomEvents] = useState<Event[]>([])
+  const [activeComponent, setActiveComponent] = useState<string>(COMPONENTS.ReceivedEvents);
+  const showReceivedEvents = activeComponent === COMPONENTS.ReceivedEvents;
 
   const setDevMode = async () => {
     console.log('Setting dev mode');
@@ -27,9 +31,9 @@ export default function EventsEdit({sendMessage}: EventsEditProps) {
 
   const readEvents = async () => {
     const res = await sendMessage('read', 'data', null)
-    console.log(res)
+    console.log('read',res)
     if(res.error) return
-    setEvents(res)
+    setCustomEvents(res)
   }
 
   const addEvent = async (name: string, data: {[key:string]: string}) => {
@@ -51,8 +55,8 @@ export default function EventsEdit({sendMessage}: EventsEditProps) {
     console.log(res)
   }
 
-  const deleteEvent = async () => {
-    const res = await sendMessage('delete', 'data', ['event-name-1'])
+  const deleteEvent = async (id: string) => {
+    const res = await sendMessage('delete', 'data', [id])
     console.log(res)
   }
 
@@ -68,24 +72,16 @@ export default function EventsEdit({sendMessage}: EventsEditProps) {
 
   return (
     <div>
-      <div>
-        {events.map((event, index) => (
-          <p key={index}>{event.id}</p>
-        ))}
-      </div>
-
-      <button onClick={editEvent}>
-        update event
-      </button>
-
-      <button onClick={deleteEvent}>
-        delete event
-      </button>
-
+      <button onClick={() => {setActiveComponent(COMPONENTS.CustomEventList)}}> {COMPONENTS.CustomEventList} </button>
+      <button onClick={() => {setActiveComponent(COMPONENTS.ReceivedEvents)}}> {COMPONENTS.ReceivedEvents} </button>
       <button onClick={publishEvent}>
         publish event
       </button>
-      <ReceivedEvents addEvent={addEvent} readEvents={readEvents}/>
+      {!showReceivedEvents && <CustomEventList events={customEvents} deleteEvent={deleteEvent} readEvents={readEvents}/>}
+      <button onClick={editEvent}>
+        update event
+      </button>
+      {showReceivedEvents && <ReceivedEvents addEvent={addEvent} readEvents={readEvents}/>}
     </div>
   );
 }

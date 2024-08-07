@@ -38,7 +38,8 @@ function ReceivedEvents({addEvent, readEvents}:ReceivedEventsProps) {
 
   const onAddButtonClick = () => {
     if(!selectedEvent) return
-    addEvent(selectedEvent.elementId, selectedFilterData);
+    const eventName = `${selectedEvent.section} - ${selectedEvent.elementId}`;
+    addEvent(eventName, selectedFilterData);
     readEvents();
   }
 
@@ -62,7 +63,7 @@ function ReceivedEvents({addEvent, readEvents}:ReceivedEventsProps) {
       <div>
         {receivedEvents.map(event => (
           <div key={event.elementId} onClick={() => {onEventSelect(event)}} className="eventItem">
-              {event.elementId}
+              {event.eventType} - {event.elementId}
           </div>
         ))}
       </div>
