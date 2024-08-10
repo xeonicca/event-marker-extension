@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import CustomEventList from './components/CustomEventList';
 import ReceivedEvents from './components/ReceivedEvents';
 import { COMPONENTS } from './constants';
+import './EventEdit.css'
 
 type EventsEditProps = {
   sendMessage: (action: string, actionType: string, params: any) => Promise<any>;
@@ -93,7 +94,7 @@ export default function EventsEdit({sendMessage}: EventsEditProps) {
           newEvent.id = existingEvent.id;
         }
   
-        setReceivedEvents((prevEvents) => [...prevEvents, newEvent]);
+        setReceivedEvents((prevEvents) => [newEvent, ...prevEvents]);
       }
     }
 
@@ -104,17 +105,19 @@ export default function EventsEdit({sendMessage}: EventsEditProps) {
   }, [customEvents]);
 
   return (
-    <div>
-      <button onClick={() => {setActiveComponent(COMPONENTS.CustomEventList)}}> {COMPONENTS.CustomEventList} </button>
-      <button onClick={() => {setActiveComponent(COMPONENTS.ReceivedEvents)}}> {COMPONENTS.ReceivedEvents} </button>
-      <button onClick={publishEvent}>
-        publish event
-      </button>
+    <div className='eventEditContainer'>
+      <div className="containerTab">
+        <button onClick={() => {setActiveComponent(COMPONENTS.CustomEventList)}} className="tab"> {COMPONENTS.CustomEventList} </button>
+        <button onClick={() => {setActiveComponent(COMPONENTS.ReceivedEvents)}} className="tab"> {COMPONENTS.ReceivedEvents} </button>
+      </div>
       {!showReceivedEvents && <CustomEventList events={customEvents} deleteEvent={deleteEvent} readEvents={readEvents}/>}
       <button onClick={editEvent}>
         update event
       </button>
       {showReceivedEvents && <ReceivedEvents receivedEvents={receivedEvents} addEvent={addEvent} readEvents={readEvents}/>}
+      <button onClick={publishEvent} className='publishButton'>
+        publish event
+      </button>
     </div>
   );
 }

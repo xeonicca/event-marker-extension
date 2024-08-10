@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Login from './components/Login'
 import EventsEdit from './components/EventsEdit'
+import './Container.css'
 
 const Components = {
   login: Login,
@@ -26,12 +27,12 @@ const Container = () => {
   }
 
   return (
-    <div>
-      <button onClick={() => {onButtonClick('login')}}> Login Component </button>
-      <button onClick={() => {onButtonClick('eventEdit')}}> Events Edit Container </button>
-      <div>
-        <ChildComponent sendMessage={sendMessage}/>
+    <div className='container'>
+      <div className="containerTab">
+        <button onClick={() => {onButtonClick('login')}} className="tab"> Login Component </button>
+        <button onClick={() => {onButtonClick('eventEdit')}} className="tab"> Events Edit Container </button>
       </div>
+      <ChildComponent sendMessage={sendMessage}/>
     </div>
   );
 }

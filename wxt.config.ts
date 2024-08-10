@@ -12,7 +12,8 @@ export default defineConfig({
     ],
     "host_permissions": [
       "https://at-marker-extension-dev.firebaseapp.com/*",
-      "https://tw.staging-cs.amazingtalker.com/"
+      "https://tw.staging-cs.amazingtalker.com/",
+      "https://tw.staging-tt.amazingtalker.com/",
     ],
     "content_scripts": [
       {

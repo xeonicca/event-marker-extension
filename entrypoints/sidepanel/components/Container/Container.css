@@ -1,0 +1,15 @@
+.container {
+  width: 100%;
+  height: 95%;
+}
+
+.containerTab {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 20px auto;
+}
+
+.containerTab .tab {
+  margin: 0 10px;
+}

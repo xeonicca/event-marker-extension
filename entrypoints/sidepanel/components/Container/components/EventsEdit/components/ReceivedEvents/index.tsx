@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import './ReceivedEvents.css';
 
 export type Event = {
     [key: string]: string;
@@ -40,21 +41,21 @@ function ReceivedEvents({receivedEvents ,addEvent, readEvents}:ReceivedEventsPro
 
   return (
     <div>
-      <h3>Selected Events</h3>
-      <div>
+      <h3>Received Events</h3>
+      <div className='receivedEventsContainer'>
         {receivedEvents.map(event => (
-          <div key={event.id || event.elementId} onClick={() => {onEventSelect(event)}} className="eventItem">
+          <div key={event.id || event.elementId} onClick={() => {onEventSelect(event)}} className="receivedEvent">
               { event.id || `${event.eventType} - ${event.elementId}`}
           </div>
         ))}
       </div>
       {selectedEvent && 
         <div> 
-          <p> selected event: {selectedEvent.name} </p>
-          <div>
+          <h3> selected event: {selectedEvent.name} </h3>
+          <div className='selectedEventContainer'>
               {Object.entries(selectedEvent).map(([key, value]) => (
-                  <label key={key}>
-                      <input type="checkbox" name={key} onChange={(e) => onCheckChange(key, value, e.target.checked)}/>
+                  <label key={key} className="receivedEvent">
+                      <input type="checkbox" name={key} checked={!!selectedFilterData[key]} onChange={(e) => onCheckChange(key, value, e.target.checked)}/>
                       {key}: {value}
                   </label>
               ))}

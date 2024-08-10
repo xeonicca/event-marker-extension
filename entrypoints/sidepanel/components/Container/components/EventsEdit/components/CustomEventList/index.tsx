@@ -17,6 +17,7 @@ export default function CustomEventList({events, deleteEvent, readEvents }: Cust
 
   return (
     <div>
+      <h3>Custom Event List</h3>
       {events.map((event) => (
         <div key={event.id}>
           <p>{event.id}</p>
