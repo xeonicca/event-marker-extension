@@ -17,8 +17,16 @@ type Message = {
   data: any;
 }
 
+export interface EventCriteria {
+    eventName: string;
+    eventType: string;
+    trackSection: string;
+    trackId?: string;
+    attributes?: { [x: string]: string; };
+}
+
 export default function EventsEdit({sendMessage}: EventsEditProps) {
-  const [customEvents, setCustomEvents] = useState<Event[]>([])
+  const [customEvents, setCustomEvents] = useState<EventCriteria[]>([])
   const [receivedEvents, setReceivedEvents] = useState<Event[]>([]);
   const [activeComponent, setActiveComponent] = useState<string>(COMPONENTS.ReceivedEvents);
   const showReceivedEvents = activeComponent === COMPONENTS.ReceivedEvents;
@@ -37,19 +45,19 @@ export default function EventsEdit({sendMessage}: EventsEditProps) {
   };
 
   const readEvents = async () => {
+    console.log('Reading events')
     const res = await sendMessage('read', 'data', null)
-    console.log('read',res)
-    if(res.error) return
+    console.log('read', res)
+    if(res.error) return alert(`Error reading events : ${res.error}`)
     setCustomEvents(res)
   }
 
-  const addEvent = async (name: string, data: {[key:string]: string}) => {
-    console.log('Adding event:', name, data)
+  const addEvent = async (name: string, data: EventCriteria) => {
     const res = await sendMessage('create', 'data', [
       name,
       data
     ])
-    console.log(res)
+    console.log('add', res)
   }
 
   const editEvent = async () => {
@@ -82,17 +90,6 @@ export default function EventsEdit({sendMessage}: EventsEditProps) {
       if(message.type === 'at-event-from-content') {
         console.log('Message received in the sidepanel:', message.data)
         const newEvent = message.data as Event;
-  
-        const existingEvent = customEvents.find(customEvent => {
-          return Object.entries(customEvent).every(([key, value]) => {
-            if(key === 'id') return true;
-            return newEvent[key] === value;
-          });
-        });
-  
-        if (existingEvent && existingEvent.id) {
-          newEvent.id = existingEvent.id;
-        }
   
         setReceivedEvents((prevEvents) => [newEvent, ...prevEvents]);
       }

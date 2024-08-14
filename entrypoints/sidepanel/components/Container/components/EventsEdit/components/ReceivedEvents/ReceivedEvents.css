@@ -20,6 +20,17 @@
   color: #333;
 }
 
+.primaryDataContainer {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.primaryData {
+  margin: 5px 0;
+  font-weight: 800;
+}
+
 .selectedEventContainer {
   display: flex;
   flex-direction: column;
@@ -29,5 +40,5 @@
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  margin: 0 auto;
+  margin: 0 auto 10px;
 }

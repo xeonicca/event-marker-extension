@@ -1,3 +1,4 @@
+import type { EventCriteria } from '../../index'
 import { useState } from 'react';
 import './ReceivedEvents.css';
 
@@ -7,18 +8,24 @@ export type Event = {
 
 type ReceivedEventsProps = {
   receivedEvents: Event[];
-  addEvent: (name: string, data: {[key:string]:string}) => void;
+  addEvent: (name: string, data: EventCriteria) => void;
   readEvents: () => void;
 };
+
+const primaryKeys = ['eventType', 'trackSection', 'trackId'];
 
 function ReceivedEvents({receivedEvents ,addEvent, readEvents}:ReceivedEventsProps) {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [selectedFilterData, setSelectedFilterData] = useState<{[key: string]: string}>({});
+  const [inputValue, setInputValue] = useState('');
 
   const onEventSelect = (event: Event) => {
     setSelectedEvent(event);
     setSelectedFilterData({});
   }
+
+  const primaryDataList = selectedEvent ? Object.entries(selectedEvent).filter(([key]) => primaryKeys.includes(key)) : [];
+  const isAllPrimaryDataHasValue = primaryDataList.every(([_, value]) => !!value);
 
   const onCheckChange = (key: string, value: string, isChecked: boolean) => {
     setSelectedFilterData(prevData => {
@@ -34,9 +41,28 @@ function ReceivedEvents({receivedEvents ,addEvent, readEvents}:ReceivedEventsPro
 
   const onAddButtonClick = () => {
     if(!selectedEvent) return
-    const eventName = `${selectedEvent.section} - ${selectedEvent.elementId}`;
-    addEvent(eventName, selectedFilterData);
+    if(!inputValue) return alert('Please enter event name');
+    const eventName = inputValue;
+    const {eventType, trackSection, trackId} = selectedEvent;
+    const data: EventCriteria = {
+      eventName,
+      eventType,
+      trackSection,
+      trackId,
+    }
+
+    if(Object.keys(selectedFilterData).length) {
+      data.attributes = selectedFilterData;
+    }
+
+    addEvent(eventName, data);
     readEvents();
+
+    alert('Event added successfully');
+
+    setInputValue('');
+    setSelectedEvent(null);
+    setSelectedFilterData({});
   }
 
   return (
@@ -51,15 +77,31 @@ function ReceivedEvents({receivedEvents ,addEvent, readEvents}:ReceivedEventsPro
       </div>
       {selectedEvent && 
         <div> 
-          <h3> selected event: {selectedEvent.name} </h3>
-          <div className='selectedEventContainer'>
-              {Object.entries(selectedEvent).map(([key, value]) => (
-                  <label key={key} className="receivedEvent">
-                      <input type="checkbox" name={key} checked={!!selectedFilterData[key]} onChange={(e) => onCheckChange(key, value, e.target.checked)}/>
-                      {key}: {value}
+          <h3> selected event: {selectedEvent.eventName || `${selectedEvent.trackSection} - ${selectedEvent.eventType}`} </h3>
+          <div className='primaryDataContainer'>
+            {primaryDataList.map(([key, value]) => 
+              {
+                if(!value) return null;
+                return (
+                  <label key={key} className="primaryData">
+                    {key}: {value}
                   </label>
-              ))}
+                )
+              }
+            )}
           </div>
+          {!isAllPrimaryDataHasValue && <div className='selectedEventContainer'>
+              {Object.entries(selectedEvent).map(([key, value], index) => {
+                  if(primaryKeys.includes(key) || !value) return null;
+                  return (
+                    <label key={key + index} className="receivedEvent">
+                        <input type="checkbox" name={key} checked={!!selectedFilterData[key]} onChange={(e) => onCheckChange(key, value, e.target.checked)}/>
+                        {key}: {value}
+                    </label>
+                  )
+              })}
+          </div>}
+          <input type="text" placeholder="Event Name" onChange={(e) => {setInputValue(e.target.value)}}/>
           <button onClick={onAddButtonClick}>
             add event
           </button>
