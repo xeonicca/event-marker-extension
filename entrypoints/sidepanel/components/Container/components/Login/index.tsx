@@ -1,15 +1,13 @@
-import { useState } from 'react';
+import type { User } from '../../index'
 
 type LoginProps = {
   sendMessage: (action: string, actionType: string, params: any) => Promise<any>;
+  user: User | null;
+  setUser: (user: User) => void;
 };
 
-type User = {
-  email: string;
-}
-
-export default function Login({sendMessage}: LoginProps) {
-  const [user, setUser] = useState<User | null>(null)
+export default function Login({sendMessage, user, setUser}: LoginProps) {
+  
 
   const doLogin = async () => {
     const res = await sendMessage('login', 'auth', null)

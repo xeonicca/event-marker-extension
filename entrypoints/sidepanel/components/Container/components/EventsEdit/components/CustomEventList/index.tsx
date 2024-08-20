@@ -39,10 +39,11 @@ export default function CustomEventList({events, deleteEvent, readEvents }: Cust
       {selectedEvent && 
         <div> 
           <h3> selected event: {selectedEvent.eventName} </h3>
+          <p> description: {selectedEvent.description} </p>
+          <p> author: {selectedEvent.userEmail} </p>
           <div className='selectedEventContainer'>
               {selectedEvent.attributes && Object.entries(selectedEvent.attributes).map(([key, value]) => (
                   <label key={key} className="receivedEvent">
-                      <input type="checkbox" name={key}/>
                       {key}: {value}
                   </label>
               ))}

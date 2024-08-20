@@ -1,3 +1,4 @@
+import type { User } from '../../../../index'
 import type { EventCriteria } from '../../index'
 import { useState } from 'react';
 import './ReceivedEvents.css';
@@ -10,14 +11,16 @@ type ReceivedEventsProps = {
   receivedEvents: Event[];
   addEvent: (name: string, data: EventCriteria) => void;
   readEvents: () => void;
+  user: User;
 };
 
 const primaryKeys = ['eventType', 'trackSection', 'trackId'];
 
-function ReceivedEvents({receivedEvents ,addEvent, readEvents}:ReceivedEventsProps) {
+function ReceivedEvents({receivedEvents ,addEvent, readEvents, user}:ReceivedEventsProps) {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [selectedFilterData, setSelectedFilterData] = useState<{[key: string]: string}>({});
   const [inputValue, setInputValue] = useState('');
+  const [description, setDescription] = useState('');
 
   const onEventSelect = (event: Event) => {
     setSelectedEvent(event);
@@ -48,7 +51,9 @@ function ReceivedEvents({receivedEvents ,addEvent, readEvents}:ReceivedEventsPro
       eventName,
       eventType,
       trackSection,
+      description,
       trackId,
+      userEmail: user.email
     }
 
     if(Object.keys(selectedFilterData).length) {
@@ -101,10 +106,13 @@ function ReceivedEvents({receivedEvents ,addEvent, readEvents}:ReceivedEventsPro
                   )
               })}
           </div>}
-          <input type="text" placeholder="Event Name" onChange={(e) => {setInputValue(e.target.value)}}/>
-          <button onClick={onAddButtonClick}>
-            add event
-          </button>
+          <div className='buttonContainer'>
+            <input type="text" placeholder="Event Name" onChange={(e) => {setInputValue(e.target.value)}}/>
+            <textarea placeholder="Event Description" className='textArea' onChange={(e) => setDescription(e.target.value)}/>
+            <button onClick={onAddButtonClick}>
+              add event
+            </button>
+          </div>
         </div>
       }
     </div>

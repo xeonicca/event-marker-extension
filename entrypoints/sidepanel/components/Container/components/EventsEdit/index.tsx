@@ -1,3 +1,4 @@
+import type { User } from '../../index'
 import { useState, useEffect } from 'react';
 import CustomEventList from './components/CustomEventList';
 import ReceivedEvents from './components/ReceivedEvents';
@@ -6,6 +7,8 @@ import './EventEdit.css'
 
 type EventsEditProps = {
   sendMessage: (action: string, actionType: string, params: any) => Promise<any>;
+  setUser: (user: User) => void;
+  user: User;
 };
 
 export type Event = {
@@ -21,11 +24,13 @@ export interface EventCriteria {
     eventName: string;
     eventType: string;
     trackSection: string;
+    description: string;
+    userEmail: string;
     trackId?: string;
     attributes?: { [x: string]: string; };
 }
 
-export default function EventsEdit({sendMessage}: EventsEditProps) {
+export default function EventsEdit({sendMessage, user}: EventsEditProps) {
   const [customEvents, setCustomEvents] = useState<EventCriteria[]>([])
   const [receivedEvents, setReceivedEvents] = useState<Event[]>([]);
   const [activeComponent, setActiveComponent] = useState<string>(COMPONENTS.ReceivedEvents);
@@ -111,7 +116,7 @@ export default function EventsEdit({sendMessage}: EventsEditProps) {
       <button onClick={editEvent}>
         update event
       </button>
-      {showReceivedEvents && <ReceivedEvents receivedEvents={receivedEvents} addEvent={addEvent} readEvents={readEvents}/>}
+      {showReceivedEvents && <ReceivedEvents receivedEvents={receivedEvents} addEvent={addEvent} readEvents={readEvents} user={user} />}
       <button onClick={publishEvent} className='publishButton'>
         publish event
       </button>
