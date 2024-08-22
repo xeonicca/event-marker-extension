@@ -9,7 +9,7 @@ export type Event = {
 
 type ReceivedEventsProps = {
   receivedEvents: Event[];
-  addEvent: (name: string, data: EventCriteria) => void;
+  addEvent: (data: EventCriteria) => void;
   readEvents: () => void;
   user: User;
 };
@@ -60,10 +60,8 @@ function ReceivedEvents({receivedEvents ,addEvent, readEvents, user}:ReceivedEve
       data.attributes = selectedFilterData;
     }
 
-    addEvent(eventName, data);
+    addEvent(data);
     readEvents();
-
-    alert('Event added successfully');
 
     setInputValue('');
     setSelectedEvent(null);
@@ -74,21 +72,21 @@ function ReceivedEvents({receivedEvents ,addEvent, readEvents, user}:ReceivedEve
     <div>
       <h3>Received Events</h3>
       <div className='receivedEventsContainer'>
-        {receivedEvents.map(event => (
-          <div key={event.id || event.elementId} onClick={() => {onEventSelect(event)}} className="receivedEvent">
-              { event.id || `${event.eventType} - ${event.elementId}`}
+        {receivedEvents.map((event, index) => (
+          <div key={event.id + index || event.elementId + index } onClick={() => {onEventSelect(event)}} className="receivedEvent">
+              { event.id || `${event.trackSection} - ${event.eventType} - ${event.elementId}` }
           </div>
         ))}
       </div>
       {selectedEvent && 
         <div> 
-          <h3> selected event: {selectedEvent.eventName || `${selectedEvent.trackSection} - ${selectedEvent.eventType}`} </h3>
+          <h3> selected event: {selectedEvent.eventName || `${selectedEvent.trackSection} - ${selectedEvent.eventType} - ${selectedEvent.elementId}`} </h3>
           <div className='primaryDataContainer'>
-            {primaryDataList.map(([key, value]) => 
+            {primaryDataList.map(([key, value], index) => 
               {
                 if(!value) return null;
                 return (
-                  <label key={key} className="primaryData">
+                  <label key={key + index} className="primaryData">
                     {key}: {value}
                   </label>
                 )
@@ -106,13 +104,13 @@ function ReceivedEvents({receivedEvents ,addEvent, readEvents, user}:ReceivedEve
                   )
               })}
           </div>}
-          <div className='buttonContainer'>
+          {!selectedEvent.eventName && <div className='buttonContainer'>
             <input type="text" placeholder="Event Name" onChange={(e) => {setInputValue(e.target.value)}}/>
             <textarea placeholder="Event Description" className='textArea' onChange={(e) => setDescription(e.target.value)}/>
             <button onClick={onAddButtonClick}>
               add event
             </button>
-          </div>
+          </div>}
         </div>
       }
     </div>

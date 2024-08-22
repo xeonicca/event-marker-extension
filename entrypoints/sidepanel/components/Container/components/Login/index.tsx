@@ -11,11 +11,12 @@ export default function Login({sendMessage, user, setUser}: LoginProps) {
 
   const doLogin = async () => {
     const res = await sendMessage('login', 'auth', null)
+    console.log('login res', res)
     if (res.error) {
       console.error(res.error)
       return
     }
-    setUser(res.user)
+    setUser(res)
   }
 
   return (

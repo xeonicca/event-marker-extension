@@ -26,6 +26,7 @@ export interface EventCriteria {
     trackSection: string;
     description: string;
     userEmail: string;
+    id: string;
     trackId?: string;
     attributes?: { [x: string]: string; };
 }
@@ -57,12 +58,14 @@ export default function EventsEdit({sendMessage, user}: EventsEditProps) {
     setCustomEvents(res)
   }
 
-  const addEvent = async (name: string, data: EventCriteria) => {
+  const addEvent = async (data: EventCriteria) => {
+    console.log('Adding event', data)
     const res = await sendMessage('create', 'data', [
-      name,
       data
     ])
     console.log('add', res)
+    if(res.error) return alert(`Error adding event : ${res.error}`)
+    alert('Event added successfully');
   }
 
   const editEvent = async () => {
@@ -77,13 +80,24 @@ export default function EventsEdit({sendMessage, user}: EventsEditProps) {
 
   const deleteEvent = async (id: string) => {
     const res = await sendMessage('delete', 'data', [id])
-    console.log(res)
+    console.log('delete res', res)
   }
 
   const publishEvent = async () => {
     const res = await sendMessage('upload', 'storage', null)
     console.log(res)
+    if(res.error) return alert(`Error reading events : ${res.error}`)
+    alert('Events published')
   }
+
+  function flattenAttributes(eventData: EventCriteria) {
+
+        return {
+            ...eventData,
+            ...eventData.attributes,
+            attributes: undefined
+        };
+}
 
   useEffect(() => {
     setDevMode()
@@ -91,10 +105,32 @@ export default function EventsEdit({sendMessage, user}: EventsEditProps) {
   }, [])
 
   useEffect(() => {
-    const handleMessage = (message: Message) => {
+    const handleMessage = async (message: Message) => {
       if(message.type === 'at-event-from-content') {
         console.log('Message received in the sidepanel:', message.data)
         const newEvent = message.data as Event;
+        const hasTrackId = !!newEvent.trackId;
+        const params = [
+            newEvent.eventType,
+            newEvent.trackSection,
+            hasTrackId ? newEvent.trackId : null
+          ]
+        
+        const result = await sendMessage('query', 'data', params)
+        console.log('query result', result)
+        const hasResult = result && result.length > 0;
+        
+        if(!hasResult) return setReceivedEvents((prevEvents) => [newEvent, ...prevEvents]);
+        if(hasResult && hasTrackId) return setReceivedEvents((prevEvents) => [result[0], ...prevEvents]);
+
+        // const secondaryKeys = ['tagName', 'className', 'innerText', 'xPath', 'elementId']
+        // const matchedEvent = result.find((event: EventCriteria) => {
+        //   return secondaryKeys.some(key => newEvent[key] && event.attributes && newEvent[key] === event.attributes[key])
+        // })
+        // console.log('matched event', matchedEvent)
+        // const newMatchedEvent = flattenAttributes(matchedEvent);
+        // if(matchedEvent) return setReceivedEvents((prevEvents) => [newMatchedEvent, ...prevEvents]);
+        
   
         setReceivedEvents((prevEvents) => [newEvent, ...prevEvents]);
       }
@@ -113,9 +149,9 @@ export default function EventsEdit({sendMessage, user}: EventsEditProps) {
         <button onClick={() => {setActiveComponent(COMPONENTS.ReceivedEvents)}} className="tab"> {COMPONENTS.ReceivedEvents} </button>
       </div>
       {!showReceivedEvents && <CustomEventList events={customEvents} deleteEvent={deleteEvent} readEvents={readEvents}/>}
-      <button onClick={editEvent}>
+      {/* <button onClick={editEvent}>
         update event
-      </button>
+      </button> */}
       {showReceivedEvents && <ReceivedEvents receivedEvents={receivedEvents} addEvent={addEvent} readEvents={readEvents} user={user} />}
       <button onClick={publishEvent} className='publishButton'>
         publish event

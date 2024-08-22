@@ -6,6 +6,7 @@ export default defineContentScript({
     window.addEventListener("message", function(event) {
       if (event.source != window) return;
       if(!event.data.type) return;
+      console.log("Content script received message:", event.data);
     
       if (event.data.type == "at-event") {
           console.log("Message received in the content script from the page:", event.data);

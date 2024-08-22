@@ -38,8 +38,8 @@ const Container = () => {
         <button onClick={() => {onButtonClick('eventEdit')}} className="tab"> Events Edit Container </button>
       </div> */}
       {/* <ChildComponent sendMessage={sendMessage} user={user} setUser={setUser}/> */}
-      {user ? <EventsEdit sendMessage={sendMessage} user={user} setUser={setUser}/> : <Login sendMessage={sendMessage} user={user} setUser={setUser}/>}
       <p> user: {user?.email} </p>
+      {user ? <EventsEdit sendMessage={sendMessage} user={user} setUser={setUser}/> : <Login sendMessage={sendMessage} user={user} setUser={setUser}/>}
     </div>
   );
 }

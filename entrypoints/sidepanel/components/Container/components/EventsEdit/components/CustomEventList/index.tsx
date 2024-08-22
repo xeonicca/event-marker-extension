@@ -30,7 +30,7 @@ export default function CustomEventList({events, deleteEvent, readEvents }: Cust
       {events.map((event) => (
         <div key={event.eventName} className='eventItem'>
           <p className='eventName' onClick={() => {onEventClick(event)}}>{event.eventName}</p>
-          <button onClick={() => {onDeleteCLick(event.eventName)}}>
+          <button onClick={() => {onDeleteCLick(event.id)}}>
             delete event  
           </button>
         </div>
@@ -42,10 +42,13 @@ export default function CustomEventList({events, deleteEvent, readEvents }: Cust
           <p> description: {selectedEvent.description} </p>
           <p> author: {selectedEvent.userEmail} </p>
           <div className='selectedEventContainer'>
+              <p> track-section: {selectedEvent.trackSection} </p>
+              <p> eventType: {selectedEvent.eventType} </p>
+              {selectedEvent.trackId && <p> trackId: {selectedEvent.trackId} </p>}
               {selectedEvent.attributes && Object.entries(selectedEvent.attributes).map(([key, value]) => (
-                  <label key={key} className="receivedEvent">
+                  <p key={key}>
                       {key}: {value}
-                  </label>
+                  </p>
               ))}
           </div>
         </div>
