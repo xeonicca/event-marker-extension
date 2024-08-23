@@ -58,3 +58,8 @@
   border-radius: 5px;
   margin: 5px 0;
 }
+
+.hasEvent {
+  font-weight: 1000;
+  text-decoration: underline;
+} 

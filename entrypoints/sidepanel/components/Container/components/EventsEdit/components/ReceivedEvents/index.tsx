@@ -73,8 +73,8 @@ function ReceivedEvents({receivedEvents ,addEvent, readEvents, user}:ReceivedEve
       <h3>Received Events</h3>
       <div className='receivedEventsContainer'>
         {receivedEvents.map((event, index) => (
-          <div key={event.id + index || event.elementId + index } onClick={() => {onEventSelect(event)}} className="receivedEvent">
-              { event.id || `${event.trackSection} - ${event.eventType} - ${event.elementId}` }
+          <div key={event.id + index || event.elementId + index } onClick={() => {onEventSelect(event)}} className={`receivedEvent ${event.eventName ? 'hasEvent' : ''}`}>
+              { event.eventName || `${event.trackSection} - ${event.eventType}` }
           </div>
         ))}
       </div>
