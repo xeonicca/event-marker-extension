@@ -1,0 +1,65 @@
+.receivedEventsContainer {
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  height: 120px;
+  overflow-y: auto;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 0 auto;
+}
+
+.receivedEvent {
+  margin: 5px 0;
+  cursor: pointer;
+}
+
+.receivedEvent:hover {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.primaryDataContainer {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.primaryData {
+  margin: 5px 0;
+  font-weight: 800;
+}
+
+.selectedEventContainer {
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  height: 220px;
+  overflow-y: auto;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 0 auto 10px;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 240px;
+  margin: 0 auto;
+}
+
+.textArea {
+  height: 60px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 5px 0;
+}
+
+.hasEvent {
+  font-weight: 1000;
+  text-decoration: underline;
+} 
