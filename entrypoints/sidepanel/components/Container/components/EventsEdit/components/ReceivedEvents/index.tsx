@@ -72,7 +72,7 @@ function ReceivedEvents({receivedEvents ,addEvent, readEvents, user}:ReceivedEve
 
   return (
     <div>
-      <h3>Received Events</h3>
+      <h3>接收到的事件</h3>
       <div className='receivedEventsContainer'>
         {receivedEvents.map((event, index) => (
           <div key={event.trackId? event.trackId+index: event.xPath+index } onClick={() => {onEventSelect(event)}} className={`receivedEvent ${event.eventName ? 'hasEvent' : ''}`}>

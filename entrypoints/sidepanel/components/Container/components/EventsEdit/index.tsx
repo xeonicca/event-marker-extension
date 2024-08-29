@@ -149,8 +149,8 @@ export default function EventsEdit({sendMessage, user}: EventsEditProps) {
   return (
     <div className='eventEditContainer'>
       <div className="containerTab">
-        <button onClick={() => {setActiveComponent(COMPONENTS.CustomEventList)}} className="tab"> {COMPONENTS.CustomEventList} </button>
-        <button onClick={() => {setActiveComponent(COMPONENTS.ReceivedEvents)}} className="tab"> {COMPONENTS.ReceivedEvents} </button>
+        <button onClick={() => {setActiveComponent(COMPONENTS.CustomEventList)}} className="tab"> {'已新增事件列表'} </button>
+        <button onClick={() => {setActiveComponent(COMPONENTS.ReceivedEvents)}} className="tab"> {'接收與創建事件'} </button>
       </div>
       {!showReceivedEvents && <CustomEventList events={customEvents} deleteEvent={deleteEvent} readEvents={readEvents}/>}
       {/* <button onClick={editEvent}>

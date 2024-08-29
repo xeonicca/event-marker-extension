@@ -27,7 +27,7 @@ export default function CustomEventList({events, deleteEvent, readEvents }: Cust
 
   return (
     <div>
-      <h3>Custom Event List</h3>
+      <h3>事件列表</h3>
       {events.map((event) => (
         <div key={event.eventName} className='eventItem'>
           <p className='eventName' onClick={() => {onEventClick(event)}}>{event.eventName}</p>
