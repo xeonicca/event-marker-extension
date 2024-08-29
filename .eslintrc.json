@@ -1,0 +1,153 @@
+{
+    "root": true,
+    "ignorePatterns": ["**/*"],
+    "extends": ["plugin:prettier/recommended", "plugin:import/recommended"],
+    "plugins": ["@nx"],
+    "rules": {
+      "prettier/prettier": [
+        "error",
+        {
+          "tabWidth": 2,
+          "singleQuote": true,
+          "printWidth": 120,
+          "bracketSpacing": true
+        }
+      ],
+  
+      "import/no-unresolved": [
+        "warn",
+        {
+          "commonjs": true,
+          "amd": true,
+          "ignore": ["^virtual:", "uno.css"]
+        }
+      ],
+      "import/no-named-as-default": "off",
+      "import/no-default-export": "off",
+      "import/no-named-export": "off",
+      "import/order": [
+        "error",
+        {
+          "groups": [
+            "type",
+            "builtin",
+            "external",
+            "internal",
+            "parent",
+            "sibling",
+            "index"
+          ],
+          "newlines-between": "never",
+          "pathGroupsExcludedImportTypes": ["type"],
+          "pathGroups": [
+            {
+              "pattern": "@amazingtalker/**",
+              "group": "internal",
+              "position": "after"
+            },
+            {
+              "pattern": "~*/**",
+              "group": "parent",
+              "position": "before"
+            }
+          ]
+        }
+      ]
+    },
+    "overrides": [
+      {
+        "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+        "rules": {
+          "@nx/enforce-module-boundaries": [
+            "error",
+            {
+              "enforceBuildableLibDependency": true,
+              "allow": ["@amazingtalker/**", "~*/.*"],
+              "depConstraints": [
+                {
+                  "sourceTag": "*",
+                  "onlyDependOnLibsWithTags": ["*"]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+        "plugins": ["check-file"],
+        "excludedFiles": ["*.stories.tsx", "index.*", "main.*", "_app.*"],
+        "rules": {
+          "check-file/filename-naming-convention": [
+            "error",
+            {
+              "**/*(!context|hooks).{jsx,tsx}": "PASCAL_CASE",
+              "**/*.{js,ts}": "KEBAB_CASE"
+            },
+            {
+              "ignoreMiddleExtensions": true
+            }
+          ]
+        }
+      },
+      {
+        "files": ["*.tsx", "*.jsx"],
+        "extends": ["plugin:react/recommended", "plugin:react/jsx-runtime"],
+        "plugins": ["react", "jsx-a11y"],
+        "rules": {
+          "react/no-array-index-key": "error"
+        }
+      },
+      {
+        "files": ["*.ts", "*.tsx"],
+        "extends": ["plugin:@nx/typescript", "plugin:import/typescript"],
+        "settings": {
+          "import/resolver": {
+            "typescript": {
+              "project": "**/tsconfig.*?.json"
+            }
+          }
+        }
+      },
+      {
+        "files": ["*.ts", "*.tsx"],
+        "excludedFiles": ["*.stories.tsx", "**/.storybook/**/*.tsx", "**/.storybook/**/*.ts", "**/*.config.ts"],
+        "parserOptions": {
+          "project": [
+            "packages/*/tsconfig.*?.json"
+          ]
+        },
+        "rules": {
+          "@typescript-eslint/naming-convention": [
+            "error",
+            {
+              "selector": "variable",
+              "format": ["camelCase", "UPPER_CASE", "PascalCase"]
+            },
+            {
+              "selector": "function",
+              "format": ["PascalCase", "camelCase"]
+            },
+            {
+              "selector": "typeLike",
+              "format": ["PascalCase"]
+            }
+          ]
+        }
+      },
+      {
+        "files": ["*.js", "*.jsx"],
+        "extends": ["plugin:@nx/javascript"],
+        "rules": {}
+      },
+      {
+        "files": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
+        "env": {
+          "jest": true
+        },
+        "extends": ["plugin:jest/recommended", "plugin:jest-dom/recommended", "plugin:testing-library/react"],
+        "rules": {}
+      }
+    ]
+  }
+  

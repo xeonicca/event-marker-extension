@@ -1,6 +1,7 @@
 import type { User } from '../../../../index'
 import type { EventCriteria } from '../../index'
 import { useState } from 'react';
+import PrimaryDataList from './components/PrimaryDataList';
 import './ReceivedEvents.css';
 
 export type Event = {
@@ -82,16 +83,7 @@ function ReceivedEvents({receivedEvents ,addEvent, readEvents, user}:ReceivedEve
         <div> 
           <h3> selected event: {selectedEvent.eventName || `${selectedEvent.trackSection} - ${selectedEvent.eventType} - ${selectedEvent.elementId}`} </h3>
           <div className='primaryDataContainer'>
-            {primaryDataList.map(([key, value], index) => 
-              {
-                if(!value) return null;
-                return (
-                  <label key={key + index} className="primaryData">
-                    {key}: {value}
-                  </label>
-                )
-              }
-            )}
+            <PrimaryDataList primaryDataList={primaryDataList}/>
           </div>
           {!isAllPrimaryDataHasValue && <div className='selectedEventContainer'>
               {Object.entries(selectedEvent).map(([key, value], index) => {
