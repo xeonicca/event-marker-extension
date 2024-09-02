@@ -1,5 +1,6 @@
 import type { EventCriteria } from '../../index'
 import { useState } from 'react';
+import {ATTRIBUTE_TITLES} from '../ReceivedEvents/components/AttributeList'
 import './CustomEventList.css'
 
 type CustomEventListProps = {
@@ -26,7 +27,7 @@ export default function CustomEventList({events, deleteEvent, readEvents }: Cust
 
   return (
     <div>
-      <h3>Custom Event List</h3>
+      <h3>事件列表</h3>
       {events.map((event) => (
         <div key={event.eventName} className='eventItem'>
           <p className='eventName' onClick={() => {onEventClick(event)}}>{event.eventName}</p>
@@ -42,12 +43,12 @@ export default function CustomEventList({events, deleteEvent, readEvents }: Cust
           <p> description: {selectedEvent.description} </p>
           <p> author: {selectedEvent.userEmail} </p>
           <div className='selectedEventContainer'>
-              <p> track-section: {selectedEvent.trackSection} </p>
-              <p> eventType: {selectedEvent.eventType} </p>
-              {selectedEvent.trackId && <p> trackId: {selectedEvent.trackId} </p>}
+              <p> 事件區塊: {selectedEvent.trackSection} </p>
+              <p> 事件類型: {selectedEvent.eventType} </p>
+              {selectedEvent.trackId && <p> 事件 Id: {selectedEvent.trackId} </p>}
               {selectedEvent.attributes && Object.entries(selectedEvent.attributes).map(([key, value]) => (
                   <p key={key}>
-                      {key}: {value}
+                      {ATTRIBUTE_TITLES[key] || key}: {value}
                   </p>
               ))}
           </div>

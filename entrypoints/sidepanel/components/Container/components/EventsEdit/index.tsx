@@ -91,13 +91,13 @@ export default function EventsEdit({sendMessage, user}: EventsEditProps) {
   }
 
   function flattenAttributes(eventData: EventCriteria) {
-
-        return {
-            ...eventData,
-            ...eventData.attributes,
-            attributes: undefined
-        };
-}
+    return {
+        ...eventData,
+        ...eventData.attributes,
+        attributes: '',
+        trackId: ''
+    };
+  }
 
   useEffect(() => {
     setDevMode()
@@ -123,13 +123,17 @@ export default function EventsEdit({sendMessage, user}: EventsEditProps) {
         if(!hasResult) return setReceivedEvents((prevEvents) => [newEvent, ...prevEvents]);
         if(hasResult && hasTrackId) return setReceivedEvents((prevEvents) => [result[0], ...prevEvents]);
 
-        // const secondaryKeys = ['tagName', 'className', 'innerText', 'xPath', 'elementId']
-        // const matchedEvent = result.find((event: EventCriteria) => {
-        //   return secondaryKeys.some(key => newEvent[key] && event.attributes && newEvent[key] === event.attributes[key])
-        // })
-        // console.log('matched event', matchedEvent)
-        // const newMatchedEvent = flattenAttributes(matchedEvent);
-        // if(matchedEvent) return setReceivedEvents((prevEvents) => [newMatchedEvent, ...prevEvents]);
+        const secondaryKeys = ['className', 'innerText', 'xPath']
+        const matchedEvent = result.find((event: EventCriteria) => {
+          return secondaryKeys.some(key => newEvent[key] && event.attributes && newEvent[key] === event.attributes[key])
+        })
+        console.log('matched event', matchedEvent)
+        
+        if(matchedEvent) {
+          const newMatchedEvent = flattenAttributes(matchedEvent);
+          setReceivedEvents((prevEvents) => [newMatchedEvent, ...prevEvents]);
+          return 
+        }
         
   
         setReceivedEvents((prevEvents) => [newEvent, ...prevEvents]);
@@ -145,8 +149,8 @@ export default function EventsEdit({sendMessage, user}: EventsEditProps) {
   return (
     <div className='eventEditContainer'>
       <div className="containerTab">
-        <button onClick={() => {setActiveComponent(COMPONENTS.CustomEventList)}} className="tab"> {COMPONENTS.CustomEventList} </button>
-        <button onClick={() => {setActiveComponent(COMPONENTS.ReceivedEvents)}} className="tab"> {COMPONENTS.ReceivedEvents} </button>
+        <button onClick={() => {setActiveComponent(COMPONENTS.CustomEventList)}} className="tab"> {'已新增事件列表'} </button>
+        <button onClick={() => {setActiveComponent(COMPONENTS.ReceivedEvents)}} className="tab"> {'接收與創建事件'} </button>
       </div>
       {!showReceivedEvents && <CustomEventList events={customEvents} deleteEvent={deleteEvent} readEvents={readEvents}/>}
       {/* <button onClick={editEvent}>

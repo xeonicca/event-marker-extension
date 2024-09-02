@@ -1,6 +1,8 @@
 import type { User } from '../../../../index'
 import type { EventCriteria } from '../../index'
 import { useState } from 'react';
+import PrimaryDataList from './components/PrimaryDataList';
+import AttributeList from './components/AttributeList';
 import './ReceivedEvents.css';
 
 export type Event = {
@@ -70,40 +72,21 @@ function ReceivedEvents({receivedEvents ,addEvent, readEvents, user}:ReceivedEve
 
   return (
     <div>
-      <h3>Received Events</h3>
+      <h3>接收到的事件</h3>
       <div className='receivedEventsContainer'>
         {receivedEvents.map((event, index) => (
-          <div key={event.id + index || event.elementId + index } onClick={() => {onEventSelect(event)}} className={`receivedEvent ${event.eventName ? 'hasEvent' : ''}`}>
+          <div key={event.trackId? event.trackId+index: event.xPath+index } onClick={() => {onEventSelect(event)}} className={`receivedEvent ${event.eventName ? 'hasEvent' : ''}`}>
               { event.eventName || `${event.trackSection} - ${event.eventType}` }
           </div>
         ))}
       </div>
       {selectedEvent && 
         <div> 
-          <h3> selected event: {selectedEvent.eventName || `${selectedEvent.trackSection} - ${selectedEvent.eventType} - ${selectedEvent.elementId}`} </h3>
+          <h3> 選取事件: {selectedEvent.eventName || `${selectedEvent.trackSection} - ${selectedEvent.eventType} - ${selectedEvent.elementId}`} </h3>
           <div className='primaryDataContainer'>
-            {primaryDataList.map(([key, value], index) => 
-              {
-                if(!value) return null;
-                return (
-                  <label key={key + index} className="primaryData">
-                    {key}: {value}
-                  </label>
-                )
-              }
-            )}
+            <PrimaryDataList primaryDataList={primaryDataList}/>
           </div>
-          {!isAllPrimaryDataHasValue && <div className='selectedEventContainer'>
-              {Object.entries(selectedEvent).map(([key, value], index) => {
-                  if(primaryKeys.includes(key) || !value) return null;
-                  return (
-                    <label key={key + index} className="receivedEvent">
-                        <input type="checkbox" name={key} checked={!!selectedFilterData[key]} onChange={(e) => onCheckChange(key, value, e.target.checked)}/>
-                        {key}: {value}
-                    </label>
-                  )
-              })}
-          </div>}
+          {!isAllPrimaryDataHasValue && <AttributeList selectedEvent={selectedEvent} primaryKeys={primaryKeys} selectedFilterData={selectedFilterData} onCheckChange={onCheckChange}/>}
           {!selectedEvent.eventName && <div className='buttonContainer'>
             <input type="text" placeholder="Event Name" onChange={(e) => {setInputValue(e.target.value)}}/>
             <textarea placeholder="Event Description" className='textArea' onChange={(e) => setDescription(e.target.value)}/>
