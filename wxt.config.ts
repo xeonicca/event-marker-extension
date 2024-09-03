@@ -4,7 +4,7 @@ import { defineConfig } from 'wxt';
 export default defineConfig({
   modules: ['@wxt-dev/module-react'],
   manifest: {
-    "name": "AT Event Marker",
+    "name": "AT Event Marker Dev",
     "content_security_policy": {
       "sandbox": "sandbox allow-scripts; script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com"
     },
@@ -15,10 +15,11 @@ export default defineConfig({
       "https://at-marker-extension-dev.firebaseapp.com/*",
       "https://tw.staging-cs.amazingtalker.com/",
       "https://tw.staging-tt.amazingtalker.com/",
+      "https://tw.staging.amazingtalker.com/"
     ],
     "content_scripts": [
       {
-        "matches": ["http://*/*", "https://*/*"],
+        "matches": [ "https://tw.staging-cs.amazingtalker.com/", "https://tw.staging-tt.amazingtalker.com/","https://tw.staging.amazingtalker.com/"],
         "js": ["content-scripts/content.js"]
       }
     ],
