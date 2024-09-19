@@ -6,6 +6,7 @@ const useDevModeSetting = () => {
   const [devMode, setDevMode] = useState(false);
 
   const getDevMode = async () => {
+    console.log('Get Dev mode!');
     const devMode = await getLocalStorage(AUTO_TRACKING_DEV_MODE);
     if(!devMode || devMode === 'false') return setDevMode(false);
     setDevMode(true);
@@ -21,8 +22,18 @@ const useDevModeSetting = () => {
     setDevMode(false);
   }
 
+  const setupTabChangeListener = () => {
+    console.log('start tab change listener');
+    chrome.tabs.onActivated.addListener(async (activeInfo) => {
+      console.log('Tab activated:', activeInfo.tabId);
+
+      await getDevMode();
+      console.log('finish dev mode');
+    });
+  }
+
   useEffect(() => {
-    getDevMode();
+    setupTabChangeListener();
   }, []);
   
   return {
