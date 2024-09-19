@@ -1,5 +1,6 @@
 import type { User } from '../../index'
 import { useState, useEffect } from 'react';
+import useDevModeSetting from './hooks/use-dev-mode-setting';
 import CustomEventList from './components/CustomEventList';
 import ReceivedEvents from './components/ReceivedEvents';
 import { COMPONENTS } from './constants';
@@ -37,18 +38,7 @@ export default function EventsEdit({sendMessage, user}: EventsEditProps) {
   const [activeComponent, setActiveComponent] = useState<string>(COMPONENTS.ReceivedEvents);
   const showReceivedEvents = activeComponent === COMPONENTS.ReceivedEvents;
 
-  const setDevMode = async () => {
-    console.log('Setting dev mode');
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    if (!tab.id) return;
-    chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      func: () => {
-        console.log('Dev mode enabled');
-        localStorage.setItem('auto-tracking-dev-mode', 'true');
-      },
-    });
-  };
+  const { devMode, toggleDevMode } = useDevModeSetting();
 
   const readEvents = async () => {
     console.log('Reading events')
@@ -100,7 +90,6 @@ export default function EventsEdit({sendMessage, user}: EventsEditProps) {
   }
 
   useEffect(() => {
-    setDevMode()
     readEvents()
   }, [])
 
@@ -159,6 +148,9 @@ export default function EventsEdit({sendMessage, user}: EventsEditProps) {
       {showReceivedEvents && <ReceivedEvents receivedEvents={receivedEvents} addEvent={addEvent} readEvents={readEvents} user={user} />}
       <button onClick={publishEvent} className='publishButton'>
         publish event
+      </button>
+      <button onClick={toggleDevMode}>
+        {devMode ? 'Disable Dev Mode' : 'Enable Dev Mode'}
       </button>
     </div>
   );
