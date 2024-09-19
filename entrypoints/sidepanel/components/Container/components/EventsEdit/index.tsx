@@ -150,7 +150,7 @@ export default function EventsEdit({sendMessage, user}: EventsEditProps) {
         publish event
       </button>
       <button onClick={toggleDevMode}>
-        {devMode ? 'Disable Dev Mode' : 'Enable Dev Mode'}
+        {devMode ? '關閉事件設定模式' : '開啟事件設定模式'}
       </button>
     </div>
   );
