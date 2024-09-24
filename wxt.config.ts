@@ -9,17 +9,20 @@ export default defineConfig({
       "sandbox": "sandbox allow-scripts; script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com"
     },
     "permissions": [
-      "offscreen"
+      "offscreen",
+      "scripting",
+      "activeTab",
+      "storage"
     ],
     "host_permissions": [
       "https://at-marker-extension-dev.firebaseapp.com/*",
-      "https://tw.staging-cs.amazingtalker.com/",
-      "https://tw.staging-tt.amazingtalker.com/",
-      "https://tw.staging.amazingtalker.com/"
+      "https://tw.staging-cs.amazingtalker.com/*",
+      "https://tw.staging-tt.amazingtalker.com/*",
+      "https://tw.staging.amazingtalker.com/*"
     ],
     "content_scripts": [
       {
-        "matches": [ "https://tw.staging-cs.amazingtalker.com/", "https://tw.staging-tt.amazingtalker.com/","https://tw.staging.amazingtalker.com/"],
+        "matches": [ "https://tw.staging-cs.amazingtalker.com/*", "https://tw.staging-tt.amazingtalker.com/*","https://tw.staging.amazingtalker.com/*"],
         "js": ["content-scripts/content.js"]
       }
     ],
