@@ -12,9 +12,12 @@ export default defineConfig({
       "offscreen",
       "scripting",
       "activeTab",
-      "storage"
     ],
     "host_permissions": [
+      "http://tw.at.localhost:8080/*",
+      "http://tw.at.localhost:8081/*",
+      "http://tw.at.localhost:8082/*",
+      "http://tw.at.localhost:8083/*",
       "https://at-marker-extension-dev.firebaseapp.com/*",
       "https://tw.staging-cs.amazingtalker.com/*",
       "https://tw.staging-tt.amazingtalker.com/*",
@@ -22,7 +25,15 @@ export default defineConfig({
     ],
     "content_scripts": [
       {
-        "matches": [ "https://tw.staging-cs.amazingtalker.com/*", "https://tw.staging-tt.amazingtalker.com/*","https://tw.staging.amazingtalker.com/*"],
+        "matches": [ 
+          "http://tw.at.localhost:8080/*",
+          "http://tw.at.localhost:8081/*",
+          "http://tw.at.localhost:8082/*",
+          "http://tw.at.localhost:8083/*",
+          "https://tw.staging-cs.amazingtalker.com/*", 
+          "https://tw.staging-tt.amazingtalker.com/*",
+          "https://tw.staging.amazingtalker.com/*"
+        ],
         "js": ["content-scripts/content.js"]
       }
     ],
